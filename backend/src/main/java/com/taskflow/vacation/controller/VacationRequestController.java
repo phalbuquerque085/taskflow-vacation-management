@@ -26,11 +26,6 @@ public class VacationRequestController {
 
     private final VacationService vacationService;
 
-    @GetMapping
-    @Operation(summary = "List vacation requests based on requester role")
-    public ResponseEntity<List<VacationResponseDTO>> getAll(@RequestHeader("X-User-Id") Long requesterId) {
-        return ResponseEntity.ok(vacationService.findAll(requesterId));
-    }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get vacation request details by ID")
