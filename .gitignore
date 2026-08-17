@@ -1,0 +1,32 @@
+# IDEs
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backend (Java/Maven/Gradle)
+backend/target/
+backend/build/
+backend/.gradle/
+backend/*.jar
+
+# Frontend (Node/React/Next)
+frontend/node_modules/
+frontend/.next/
+frontend/build/
+frontend/dist/
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# Database / Volumes
+pgdata/
