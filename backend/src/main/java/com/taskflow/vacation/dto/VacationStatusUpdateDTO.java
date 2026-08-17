@@ -1,0 +1,20 @@
+package com.taskflow.vacation.dto;
+
+import com.taskflow.vacation.domain.enums.VacationStatus;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class VacationStatusUpdateDTO {
+
+    @NotNull(message = "Status is required")
+    private VacationStatus status;
+}
