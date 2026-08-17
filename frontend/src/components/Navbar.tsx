@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useUser } from '@/context/UserContext';
-import { Calendar, CheckSquare, Users, UserCheck } from 'lucide-react';
+import { Calendar, CheckSquare, Users, UserCheck, LogIn } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const pathname = usePathname();
@@ -49,6 +49,7 @@ export const Navbar: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-3">
+          {/* Seletor rápido de Usuário */}
           <div className="flex items-center gap-2 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-lg text-xs">
             <UserCheck size={16} className="text-blue-400" />
             <span className="text-slate-400">Atuando como:</span>
@@ -67,6 +68,16 @@ export const Navbar: React.FC = () => {
               ))}
             </select>
           </div>
+
+          {/* Botão de Acesso à Tela de Login */}
+          <Link
+            href="/login"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600/20 hover:bg-blue-600 border border-blue-500/30 text-blue-300 hover:text-white transition-all text-xs font-medium"
+            title="Ir para a tela de login"
+          >
+            <LogIn size={14} />
+            <span>Login</span>
+          </Link>
         </div>
       </div>
     </header>

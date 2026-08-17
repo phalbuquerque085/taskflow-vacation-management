@@ -22,12 +22,14 @@ public class DataSeeder implements CommandLineRunner {
                     .name("Admin User")
                     .email("admin@taskflow.com")
                     .role(Role.ADMIN)
+                    .password("123456")
                     .build();
 
             User manager = User.builder()
                     .name("Carlos Manager")
                     .email("carlos.manager@taskflow.com")
                     .role(Role.MANAGER)
+                    .password("123456")
                     .build();
 
             userRepository.saveAll(List.of(admin, manager));
@@ -36,6 +38,7 @@ public class DataSeeder implements CommandLineRunner {
                     .name("Ana Developer")
                     .email("ana.dev@taskflow.com")
                     .role(Role.COLLABORATOR)
+                    .password("123456")
                     .manager(manager)
                     .build();
 
@@ -43,6 +46,7 @@ public class DataSeeder implements CommandLineRunner {
                     .name("Bruno Developer")
                     .email("bruno.dev@taskflow.com")
                     .role(Role.COLLABORATOR)
+                    .password("123456")
                     .manager(manager)
                     .build();
 

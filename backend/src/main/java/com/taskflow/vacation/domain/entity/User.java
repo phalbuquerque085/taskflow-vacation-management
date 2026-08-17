@@ -46,4 +46,7 @@ public class User {
     @JoinColumn(name = "manager_id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User manager;
+
+    @Column(nullable = false)
+    private String password;
 }
