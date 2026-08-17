@@ -1,5 +1,6 @@
 package com.taskflow.vacation.controller;
 
+import com.taskflow.vacation.domain.enums.VacationStatus;
 import com.taskflow.vacation.dto.VacationCreateRequestDTO;
 import com.taskflow.vacation.dto.VacationResponseDTO;
 import com.taskflow.vacation.dto.VacationStatusUpdateDTO;
@@ -11,18 +12,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -81,5 +73,28 @@ public class VacationRequestController {
             @RequestHeader("X-User-Id") Long requesterId) {
         vacationService.cancel(id, requesterId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<org.springframework.data.domain.Page<VacationResponseDTO>> findAll(
+            @RequestHeader("X-User-Id") Long requesterId,
+            @RequestParam(required = false) VacationStatus status,
+            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "startDate,desc") String sort
+    ) {
+        String[] sortParams = sort.split(",");
+        org.springframework.data.domain.Sort sortOrder = org.springframework.data.domain.Sort.by(
+                sortParams.length > 1 && sortParams[1].equalsIgnoreCase("asc")
+                        ? org.springframework.data.domain.Sort.Direction.ASC
+                        : org.springframework.data.domain.Sort.Direction.DESC,
+                sortParams[0]
+        );
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size, sortOrder);
+
+        org.springframework.data.domain.Page<VacationResponseDTO> response = vacationService.findAllPaged(requesterId, status, startDate, endDate, pageable);
+        return ResponseEntity.ok(response);
     }
 }

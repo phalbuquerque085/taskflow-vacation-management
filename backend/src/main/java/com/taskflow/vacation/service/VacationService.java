@@ -183,4 +183,26 @@ public class VacationService {
 
         throw new UnauthorizedOperationException("Access denied to this vacation request");
     }
+
+    @Transactional(readOnly = true)
+    public org.springframework.data.domain.Page<VacationResponseDTO> findAllPaged(
+            Long requesterId,
+            VacationStatus status,
+            LocalDate startDate,
+            LocalDate endDate,
+            org.springframework.data.domain.Pageable pageable) {
+
+        User requester = getRequester(requesterId);
+        org.springframework.data.domain.Page<VacationRequest> pageResult;
+
+        if (requester.getRole() == Role.ADMIN) {
+            pageResult = vacationRepository.findWithFilters(null, null, status, startDate, endDate, pageable);
+        } else if (requester.getRole() == Role.MANAGER) {
+            pageResult = vacationRepository.findWithFilters(null, requester.getId(), status, startDate, endDate, pageable);
+        } else {
+            pageResult = vacationRepository.findWithFilters(requester.getId(), null, status, startDate, endDate, pageable);
+        }
+
+        return pageResult.map(VacationResponseDTO::fromEntity);
+    }
 }

@@ -13,12 +13,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface VacationRequestRepository extends JpaRepository<VacationRequest, Long> {
-
-    List<VacationRequest> findByUserId(Long userId);
-
-    @Query("SELECT v FROM VacationRequest v WHERE v.user.manager.id = :managerId")
-    List<VacationRequest> findByManagerId(@Param("managerId") Long managerId);
+public interface VacationRepository extends JpaRepository<VacationRequest, Long> {
 
     @Query("SELECT v FROM VacationRequest v WHERE " +
             "(:userId IS NULL OR v.user.id = :userId) AND " +
@@ -35,14 +30,11 @@ public interface VacationRequestRepository extends JpaRepository<VacationRequest
             Pageable pageable
     );
 
-    @Query("SELECT COUNT(v) > 0 FROM VacationRequest v WHERE " +
-            "v.status IN :activeStatuses AND " +
-            "v.startDate <= :endDate AND v.endDate >= :startDate AND " +
-            "(:excludeId IS NULL OR v.id <> :excludeId)")
-    boolean existsOverlappingVacation(
+    @Query("SELECT v FROM VacationRequest v WHERE " +
+            "v.status NOT IN ('CANCELLED', 'REJECTED') AND " +
+            "v.startDate <= :endDate AND v.endDate >= :startDate")
+    List<VacationRequest> findOverlappingVacations(
             @Param("startDate") LocalDate startDate,
-            @Param("endDate") LocalDate endDate,
-            @Param("activeStatuses") List<VacationStatus> activeStatuses,
-            @Param("excludeId") Long excludeId
+            @Param("endDate") LocalDate endDate
     );
 }
