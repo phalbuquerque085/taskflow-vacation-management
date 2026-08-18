@@ -4,7 +4,7 @@ Sistema full-stack para gestão de colaboradores e agendamento de férias corpor
 
 ---
 
-## 🛠️ Stack Tecnológica
+##  Stack Tecnológica
 
 * **Backend:** Java 17, Spring Boot 3, Spring Data JPA, Hibernate, Bean Validation, SpringDoc OpenAPI (Swagger 3), Lombok
 * **Frontend:** Next.js (App Router), React, TypeScript, Tailwind CSS, Lucide Icons, Axios, Date-fns
@@ -13,7 +13,7 @@ Sistema full-stack para gestão de colaboradores e agendamento de férias corpor
 
 ---
 
-## 🚀 Como Executar o Projeto
+##  Como Executar o Projeto
 
 O projeto está totalmente containerizado e pode ser inicializado com um único comando a partir da raiz do repositório:
 
@@ -31,7 +31,7 @@ PostgreSQL		localhost:5432									Banco de dados relacional
 
 
 
-*Documentação da API (Swagger / OpenAPI)
+## Documentação da API (Swagger / OpenAPI)
 A API REST possui documentação interativa completa via OpenAPI 3.0:
 
 Swagger UI: http://localhost:8080/swagger-ui/index.html
@@ -48,16 +48,16 @@ Clique no botão Authorize (ícone de cadeado no topo direito), cole o token no 
 
 
 
-*Contas de Teste (Carga Inicial)O banco de dados é inicializado automaticamente com usuários pré-configurados para simulação de todos os papéis:
-Perfil				E-mail								Senha		Descrição / Hierarquia
-ADMIN				admin@taskflow.com					123456		Acesso completo e gestão de colaboradores
-MANAGER				carlos.manager@taskflow.com			123456		Gestor responsável pela equipe de desenvolvimento
-COLLABORATOR		bruna.dev@taskflow.com				123456		Desenvolvedora (Liderada por Carlos)
-COLLABORATOR		bruno.dev@taskflow.com				123456		Desenvolvedor (Liderado por Carlos)
+## Contas de Teste (Carga Inicial)O banco de dados é inicializado automaticamente com usuários pré-configurados para simulação de todos os papéis:
+* **Perfil		-		E-mail						-		Senha	-	Descrição / Hierarquia
+* **ADMIN		-		admin@taskflow.com				-	123456	-	Acesso completo e gestão de colaboradores
+* **MANAGER		-		carlos.manager@taskflow.com		-	123456	-	Gestor responsável pela equipe de desenvolvimento
+* **COLLABORATOR	-	bruna.dev@taskflow.com			-	123456	-	Desenvolvedora (Liderada por Carlos)
+* **COLLABORATOR	-	bruno.dev@taskflow.com			-	123456	-	Desenvolvedor (Liderado por Carlos)
 
 
 
-*Principais Regras de Negócio & Funcionalidades
+## Principais Regras de Negócio & Funcionalidades
 Regra de Ouro (Bloqueio de Sobreposição Global): O sistema impede que mais de um colaborador tire férias simultaneamente no mesmo período ou em intervalos com sobreposição parcial.
 
 Alçadas de Aprovação:
