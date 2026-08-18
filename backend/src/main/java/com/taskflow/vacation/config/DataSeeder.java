@@ -5,6 +5,7 @@ import com.taskflow.vacation.domain.enums.Role;
 import com.taskflow.vacation.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -14,31 +15,34 @@ import java.util.List;
 public class DataSeeder implements CommandLineRunner {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) {
         if (userRepository.count() == 0) {
+            String defaultPassword = passwordEncoder.encode("123456");
+
             User admin = User.builder()
                     .name("Admin User")
                     .email("admin@taskflow.com")
                     .role(Role.ADMIN)
-                    .password("123456")
+                    .password(defaultPassword)
                     .build();
 
             User manager = User.builder()
                     .name("Carlos Manager")
                     .email("carlos.manager@taskflow.com")
                     .role(Role.MANAGER)
-                    .password("123456")
+                    .password(defaultPassword)
                     .build();
 
             userRepository.saveAll(List.of(admin, manager));
 
             User dev1 = User.builder()
-                    .name("Ana Developer")
-                    .email("ana.dev@taskflow.com")
+                    .name("Bruna Developer")
+                    .email("bruna.dev@taskflow.com")
                     .role(Role.COLLABORATOR)
-                    .password("123456")
+                    .password(defaultPassword)
                     .manager(manager)
                     .build();
 
@@ -46,7 +50,7 @@ public class DataSeeder implements CommandLineRunner {
                     .name("Bruno Developer")
                     .email("bruno.dev@taskflow.com")
                     .role(Role.COLLABORATOR)
-                    .password("123456")
+                    .password(defaultPassword)
                     .manager(manager)
                     .build();
 

@@ -1,15 +1,17 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { useUser } from '@/context/UserContext';
-import { VacationRequest, VacationStatus, PageResponse } from '@/types';
+import { VacationRequest, PageResponse } from '@/types';
 import { api } from '@/services/api';
 import { StatusBadge } from '@/components/StatusBadge';
 import { VacationCalendar } from '@/components/VacationCalendar';
-import { Calendar as CalendarIcon, List, Plus, XCircle, AlertCircle, CheckCircle2, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Calendar as CalendarIcon, List, Plus, XCircle, AlertCircle, CheckCircle2, Filter, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 
 export default function HomePage() {
+  const router = useRouter();
   const { currentUser } = useUser();
   const [requests, setRequests] = useState<VacationRequest[]>([]);
   const [loading, setLoading] = useState(true);
@@ -25,6 +27,13 @@ export default function HomePage() {
   const [endDate, setEndDate] = useState('');
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  // Redirecionamento automático caso o usuário não esteja autenticado
+  useEffect(() => {
+    if (!currentUser) {
+      router.replace('/login');
+    }
+  }, [currentUser, router]);
 
   const fetchVacations = useCallback(async () => {
     if (!currentUser) return;
@@ -48,8 +57,10 @@ export default function HomePage() {
   }, [currentUser, page, filterStatus]);
 
   useEffect(() => {
-    fetchVacations();
-  }, [fetchVacations]);
+    if (currentUser) {
+      fetchVacations();
+    }
+  }, [fetchVacations, currentUser]);
 
   const handleCreateRequest = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,6 +99,16 @@ export default function HomePage() {
       alert(msg);
     }
   };
+
+  // Se não estiver logado, não renderiza a interface enquanto o Next.js processa o redirecionamento
+  if (!currentUser) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-3 text-slate-400">
+        <Loader2 className="animate-spin text-blue-500" size={32} />
+        <p className="text-sm">Redirecionando para autenticação...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -185,7 +206,6 @@ export default function HomePage() {
                   Histórico de Solicitações
                 </h2>
 
-                {/* Filtro por Status */}
                 <div className="flex items-center gap-2">
                   <Filter size={14} className="text-slate-400" />
                   <select
@@ -256,7 +276,6 @@ export default function HomePage() {
                 </table>
               </div>
 
-              {/* Barra de Paginação */}
               {totalPages > 1 && (
                 <div className="p-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400 bg-slate-950/40">
                   <span>

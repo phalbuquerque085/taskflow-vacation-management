@@ -112,10 +112,10 @@ export default function LoginPage() {
               Manager
             </button>
             <button
-              onClick={() => fillQuickAccount('ana.dev@taskflow.com')}
+              onClick={() => fillQuickAccount('bruna.dev@taskflow.com')}
               className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 rounded-md text-slate-300 transition-colors"
             >
-              Ana (Dev)
+              Bruna (Dev)
             </button>
           </div>
         </div>

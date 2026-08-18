@@ -46,7 +46,7 @@ class VacationRequestControllerTest {
         VacationResponseDTO dto = VacationResponseDTO.builder()
                 .id(10L)
                 .userId(3L)
-                .userName("Ana Dev")
+                .userName("Bruna Dev")
                 .startDate(LocalDate.now().plusDays(2))
                 .endDate(LocalDate.now().plusDays(10))
                 .status(VacationStatus.PENDING)
@@ -59,7 +59,7 @@ class VacationRequestControllerTest {
                         .header("X-User-Id", 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.size()").value(1))
-                .andExpect(jsonPath("$.content[0].userName").value("Ana Dev"));
+                .andExpect(jsonPath("$.content[0].userName").value("Bruna Dev"));
     }
 
     @Test
@@ -72,7 +72,7 @@ class VacationRequestControllerTest {
         VacationResponseDTO response = VacationResponseDTO.builder()
                 .id(10L)
                 .userId(3L)
-                .userName("Ana Dev")
+                .userName("Bruna Dev")
                 .startDate(start)
                 .endDate(end)
                 .status(VacationStatus.PENDING)

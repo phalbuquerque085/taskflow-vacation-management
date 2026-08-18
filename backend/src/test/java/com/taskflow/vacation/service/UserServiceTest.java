@@ -54,8 +54,8 @@ class UserServiceTest {
 
         collaborator = User.builder()
                 .id(3L)
-                .name("Ana Dev")
-                .email("ana@taskflow.com")
+                .name("Bruna Dev")
+                .email("bruna@taskflow.com")
                 .role(Role.COLLABORATOR)
                 .manager(manager)
                 .build();
