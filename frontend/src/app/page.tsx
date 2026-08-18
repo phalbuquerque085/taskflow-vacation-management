@@ -123,18 +123,16 @@ export default function HomePage() {
         <div className="flex items-center bg-slate-900 border border-slate-800 p-1 rounded-xl w-fit">
           <button
             onClick={() => setViewMode('list')}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              viewMode === 'list' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'
-            }`}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${viewMode === 'list' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'
+              }`}
           >
             <List size={15} />
             Lista
           </button>
           <button
             onClick={() => setViewMode('calendar')}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              viewMode === 'calendar' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'
-            }`}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${viewMode === 'calendar' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'
+              }`}
           >
             <CalendarIcon size={15} />
             Calendário
@@ -151,11 +149,10 @@ export default function HomePage() {
 
           {feedback && (
             <div
-              className={`p-3 rounded-lg text-sm mb-4 flex items-start gap-2 ${
-                feedback.type === 'success'
+              className={`p-3 rounded-lg text-sm mb-4 flex items-start gap-2 ${feedback.type === 'success'
                   ? 'bg-emerald-950/50 border border-emerald-800 text-emerald-300'
                   : 'bg-rose-950/50 border border-rose-800 text-rose-300'
-              }`}
+                }`}
             >
               {feedback.type === 'success' ? <CheckCircle2 size={16} className="mt-0.5" /> : <AlertCircle size={16} className="mt-0.5" />}
               <span>{feedback.message}</span>
@@ -169,8 +166,9 @@ export default function HomePage() {
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
+                onClick={(e) => e.currentTarget.showPicker?.()}
                 required
-                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
+                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500 [color-scheme:dark] cursor-pointer"
               />
             </div>
 
@@ -180,8 +178,9 @@ export default function HomePage() {
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
+                onClick={(e) => e.currentTarget.showPicker?.()}
                 required
-                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
+                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500 [color-scheme:dark] cursor-pointer"
               />
             </div>
 

@@ -160,7 +160,7 @@ public class VacationService {
         List<VacationStatus> activeStatuses = List.of(VacationStatus.PENDING, VacationStatus.APPROVED);
         boolean overlaps = vacationRepository.existsOverlappingVacation(start, end, activeStatuses, excludeRequestId);
         if (overlaps) {
-            throw new BusinessException("There is already a vacation request scheduled for this period across the company");
+            throw new BusinessException("Já existe uma solicitação de férias agendada para este período na empresa.");
         }
     }
 

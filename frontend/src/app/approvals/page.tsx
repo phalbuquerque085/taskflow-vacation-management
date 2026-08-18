@@ -2,41 +2,62 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useUser } from '@/context/UserContext';
-import { VacationRequest, VacationStatus } from '@/types';
+import { VacationRequest, VacationStatus, PageResponse } from '@/types';
 import { api } from '@/services/api';
 import { StatusBadge } from '@/components/StatusBadge';
-import { Check, X, ShieldAlert } from 'lucide-react';
+import { Check, X, ShieldAlert, Loader2 } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 
 export default function ApprovalsPage() {
   const { currentUser } = useUser();
   const [requests, setRequests] = useState<VacationRequest[]>([]);
   const [loading, setLoading] = useState(true);
+  const [processingId, setProcessingId] = useState<number | null>(null);
 
   const fetchApprovals = useCallback(async () => {
     if (!currentUser) return;
     try {
       setLoading(true);
-      const res = await api.get<VacationRequest[]>('/vacations');
-      setRequests(res.data);
+      const res = await api.get<PageResponse<VacationRequest> | VacationRequest[]>('/vacations', {
+        params: {
+          size: 50,
+          sort: 'startDate,desc',
+        },
+      });
+
+      // Extrai os itens caso venha envelopado no Page do Spring (content) ou como array direto
+      const data = res.data;
+      if (Array.isArray(data)) {
+        setRequests(data);
+      } else if (data && Array.isArray((data as PageResponse<VacationRequest>).content)) {
+        setRequests((data as PageResponse<VacationRequest>).content);
+      } else {
+        setRequests([]);
+      }
     } catch (err: any) {
-      console.error(err);
+      console.error('Erro ao buscar solicitações para aprovação:', err);
+      setRequests([]);
     } finally {
       setLoading(false);
     }
   }, [currentUser]);
 
   useEffect(() => {
-    fetchApprovals();
-  }, [fetchApprovals]);
+    if (currentUser && currentUser.role !== 'COLLABORATOR') {
+      fetchApprovals();
+    }
+  }, [currentUser, fetchApprovals]);
 
   const handleUpdateStatus = async (id: number, status: VacationStatus) => {
     try {
+      setProcessingId(id);
       await api.patch(`/vacations/${id}/status`, { status });
-      fetchApprovals();
+      await fetchApprovals();
     } catch (err: any) {
       const msg = err.response?.data?.message || 'Erro ao processar alteração de status.';
       alert(msg);
+    } finally {
+      setProcessingId(null);
     }
   };
 
@@ -76,21 +97,24 @@ export default function ApprovalsPage() {
               {loading ? (
                 <tr>
                   <td colSpan={4} className="px-6 py-8 text-center text-slate-500">
-                    Carregando solicitações...
+                    <div className="flex items-center justify-center gap-2">
+                      <Loader2 className="animate-spin text-blue-500" size={18} />
+                      Carregando solicitações...
+                    </div>
                   </td>
                 </tr>
               ) : requests.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="px-6 py-8 text-center text-slate-500">
-                    Nenhuma solicitação pendente para sua gestão.
+                    Nenhuma solicitação encontrada para sua gestão.
                   </td>
                 </tr>
               ) : (
                 requests.map((item) => (
                   <tr key={item.id} className="hover:bg-slate-800/30 transition-colors">
                     <td className="px-6 py-4">
-                      <div className="font-medium text-white">{item.userName}</div>
-                      <div className="text-xs text-slate-400">{item.userEmail}</div>
+                      <div className="font-medium text-white">{item.userName || `Usuário #${item.userId}`}</div>
+                      <div className="text-xs text-slate-400">{item.userEmail || '-'}</div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="font-medium text-white">
@@ -104,14 +128,16 @@ export default function ApprovalsPage() {
                       {item.status === 'PENDING' ? (
                         <div className="flex items-center justify-end gap-2">
                           <button
+                            disabled={processingId === item.id}
                             onClick={() => handleUpdateStatus(item.id, 'APPROVED')}
-                            className="bg-emerald-600/20 hover:bg-emerald-600 text-emerald-400 hover:text-white px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors inline-flex items-center gap-1 border border-emerald-600/40"
+                            className="bg-emerald-600/20 hover:bg-emerald-600 disabled:opacity-50 text-emerald-400 hover:text-white px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors inline-flex items-center gap-1 border border-emerald-600/40"
                           >
                             <Check size={14} /> Aprovar
                           </button>
                           <button
+                            disabled={processingId === item.id}
                             onClick={() => handleUpdateStatus(item.id, 'REJECTED')}
-                            className="bg-rose-600/20 hover:bg-rose-600 text-rose-400 hover:text-white px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors inline-flex items-center gap-1 border border-rose-600/40"
+                            className="bg-rose-600/20 hover:bg-rose-600 disabled:opacity-50 text-rose-400 hover:text-white px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors inline-flex items-center gap-1 border border-rose-600/40"
                           >
                             <X size={14} /> Rejeitar
                           </button>
